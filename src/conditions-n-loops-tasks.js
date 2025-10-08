@@ -325,12 +325,12 @@ function getBalanceIndex(arr) {
     sumOfAll += arr[i];
   }
   for (let i = 0; i < arr.length; i += 1) {
-    const currentEl = arr[i];
-    const rightSum = sumOfAll - leftSum - currentEl;
+    const currentNum = arr[i];
+    const rightSum = sumOfAll - leftSum - currentNum;
     if (leftSum === rightSum) {
       return i;
     }
-    leftSum += arr[i];
+    leftSum += currentNum;
   }
   return -1;
 }
@@ -356,8 +356,60 @@ function getBalanceIndex(arr) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = [];
+  for (let i = 0; i < size; i += 1) {
+    const row = [];
+    for (let j = 0; j < size; j += 1) {
+      row[j] = 0;
+    }
+    matrix[i] = row;
+  }
+
+  let currentDirection = 'right';
+  const directions = {
+    right: { x: 1, y: 0 },
+    left: { x: -1, y: 0 },
+    down: { x: 0, y: 1 },
+    up: { x: 0, y: -1 },
+  };
+
+  for (let x = 0, y = 0, i = 1; i <= size ** 2; i += 1) {
+    matrix[y][x] = i;
+    const { x: dirX, y: dirY } = directions[currentDirection];
+    const nextX = x + dirX;
+    const nextY = y + dirY;
+    if (
+      nextX < 0 ||
+      nextX >= size ||
+      nextY < 0 ||
+      nextY >= size ||
+      matrix[nextY][nextX] !== 0
+    ) {
+      switch (currentDirection) {
+        case 'right':
+          currentDirection = 'down';
+          break;
+        case 'down':
+          currentDirection = 'left';
+          break;
+        case 'left':
+          currentDirection = 'up';
+          break;
+        case 'up':
+          currentDirection = 'right';
+          break;
+        default:
+          return '';
+      }
+    }
+
+    const { x: newDirX, y: newDirY } = directions[currentDirection];
+    x += newDirX;
+    y += newDirY;
+  }
+
+  return matrix;
 }
 
 /**
