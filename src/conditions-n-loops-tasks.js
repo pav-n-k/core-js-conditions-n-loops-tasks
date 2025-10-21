@@ -456,8 +456,32 @@ function rotateMatrix(matrix) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const currentArr = arr;
+  const iter = (start, end) => {
+    if (start >= end) return;
+
+    const pivot = currentArr[start];
+    let storeIndex = start + 1;
+    for (let i = start + 1; i <= end; i += 1) {
+      if (currentArr[i] < pivot) {
+        const temp = currentArr[i];
+        currentArr[i] = currentArr[storeIndex];
+        currentArr[storeIndex] = temp;
+        storeIndex += 1;
+      }
+    }
+    const finalPivotIndex = storeIndex - 1;
+    const temp = currentArr[start];
+    currentArr[start] = currentArr[finalPivotIndex];
+    currentArr[finalPivotIndex] = temp;
+    iter(start, finalPivotIndex - 1);
+    iter(finalPivotIndex + 1, end);
+  };
+
+  if (currentArr.length === 0) return currentArr;
+  iter(0, currentArr.length - 1);
+  return currentArr;
 }
 
 /**
@@ -477,8 +501,42 @@ function sortByAsc(/* arr */) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  const getNewShuffle = (currentStr) => {
+    let leftStr = '';
+    let rightStr = '';
+    for (let i = 0; i < currentStr.length; i += 1) {
+      if (i % 2 === 0) {
+        leftStr += currentStr[i];
+      } else {
+        rightStr += currentStr[i];
+      }
+    }
+    return `${leftStr}${rightStr}`;
+  };
+  let current = str;
+  let period = 0;
+  let foundPeriod = false;
+
+  for (let i = 0; i < iterations; i += 1) {
+    current = getNewShuffle(current);
+    period += 1;
+
+    if (current === str) {
+      foundPeriod = true;
+      break;
+    }
+  }
+
+  if (foundPeriod) {
+    const realIterations = iterations % period;
+    current = str;
+    for (let i = 0; i < realIterations; i += 1) {
+      current = getNewShuffle(current);
+    }
+  }
+
+  return current;
 }
 
 /**
